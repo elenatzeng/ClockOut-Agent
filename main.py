@@ -2,9 +2,9 @@ name: Slack Reminder
 
 on:
   schedule:
-    # 台灣時間 16:30 (UTC 08:30) 測試
+    # 台灣時間 16:30 測試（對應 UTC 時間 08:30）
     - cron: '30 8 * * 1-5'
-  workflow_dispatch:
+  workflow_dispatch: # 支援在 GitHub 上手動按按鈕觸發
 
 jobs:
   send-reminder:
