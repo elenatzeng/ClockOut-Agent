@@ -49,7 +49,7 @@ if __name__ == "__main__":
         trigger='cron',
         day_of_week='mon-fri',
         hour=17,
-        minute=0
+        minute=50
     )
 
     print("🚀 打卡提醒服務已啟動...")
