@@ -39,7 +39,7 @@ if __name__ == "__main__":
         send_clock_in_reminder,
         trigger='cron',
         day_of_week='mon-fri',
-        hour=08,
+        hour=8,
         minute=30
     )
 
