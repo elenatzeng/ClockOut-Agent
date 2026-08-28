@@ -1,28 +1,28 @@
-import os
-import requests
-from datetime import datetime
-import pytz
+name: Slack Reminder
 
-SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
+on:
+  schedule:
+    # 台灣時間 08:30 (UTC 00:30) 與 17:00 (UTC 09:00)
+    - cron: '30 0 * * 1-5'
+    - cron: '0 9 * * 1-5'
+  workflow_dispatch:
 
-def send_slack_message(text, title):
-    if not SLACK_WEBHOOK_URL:
-        print("[錯誤] 未設定 SLACK_WEBHOOK_URL")
-        return
-    try:
-        response = requests.post(SLACK_WEBHOOK_URL, json={"text": text}, timeout=5)
-        if response.status_code == 200:
-            print(f"[成功] {title}已發送至 Slack！")
-    except Exception as e:
-        print(f"[失敗] 發送失敗: {e}")
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
 
-if __name__ == "__main__":
-    taiwan_tz = pytz.timezone('Asia/Taipei')
-    now_hour = datetime.now(taiwan_tz).hour
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-    if now_hour < 12:
-        msg = "☀️ **上班打卡提醒**\n大家早安！記得確認今天是否已完成 104 打卡喔！"
-        send_slack_message(msg, "上班打卡提醒")
-    else:
-        msg = "⏰ **下班打卡提醒**\n各位夥伴辛苦了！已經到下班時間囉，記得去 104 打卡！"
-        send_slack_message(msg, "下班打卡提醒")
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run script
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python main.py
