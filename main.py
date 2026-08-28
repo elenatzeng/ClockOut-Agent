@@ -1,27 +1,15 @@
 import os
+import sys
 import requests
-from apscheduler.schedulers.blocking import BlockingScheduler
 
-# 從環境變數讀取 Slack Webhook，若讀不到則提示
 SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
 
-def send_clock_in_reminder():
-    payload = {
-        "text": "☀️ **上班打卡提醒**\n大家早安！已經 09:00 囉，記得確認今天是否已完成 104 打卡喔！"
-    }
-    send_slack_message(payload, "上班打卡提醒")
-
-def send_clock_out_reminder():
-    payload = {
-        "text": "⏰ **下班打卡提醒**\n各位夥伴辛苦了！已經 17:00 囉，記得完成 104 打卡再下班喔！"
-    }
-    send_slack_message(payload, "下班打卡提醒")
-
-def send_slack_message(payload, title):
+def send_slack_message(text, title):
     if not SLACK_WEBHOOK_URL:
-        print(f"[錯誤] 未設定 SLACK_WEBHOOK_URL 環境變數，無法發送 {title}")
+        print(f"[錯誤] 未設定 SLACK_WEBHOOK_URL 環境變數")
         return
 
+    payload = {"text": text}
     try:
         response = requests.post(SLACK_WEBHOOK_URL, json=payload, timeout=5)
         if response.status_code == 200:
@@ -29,33 +17,15 @@ def send_slack_message(payload, title):
         else:
             print(f"[錯誤] Slack 回傳異常: {response.status_code}")
     except Exception as e:
-        print(f"[失敗] 訊息發送失敗: {e}")
+        print(f"[失敗] 發送失敗: {e}")
 
 if __name__ == "__main__":
-    scheduler = BlockingScheduler(timezone="Asia/Taipei")
-
-    # 1. 每週一至週五 09:00 提醒上班打卡
-    scheduler.add_job(
-        send_clock_in_reminder,
-        trigger='cron',
-        day_of_week='mon-fri',
-        hour=8,
-        minute=30
-    )
-
-    # 2. 每週一至週五 17:00 提醒下班打卡
-    scheduler.add_job(
-        send_clock_out_reminder,
-        trigger='cron',
-        day_of_week='mon-fri',
-        hour=15,
-        minute=50
-    )
-
-    print("🚀 打卡提醒服務已啟動...")
-    print("⏰ 排程：每週一至週五 09:00 與 17:00 自動發送！")
-
-    try:
-        scheduler.start()
-    except (KeyboardInterrupt, SystemExit):
-        print("🛑 服務已安全停止。")
+    # 根據傳入的參數決定發送哪種提醒
+    type_arg = sys.argv[1] if len(sys.argv) > 1 else "out"
+    
+    if type_arg == "in":
+        msg = "☀️ **上班打卡提醒**\n大家早安！記得確認今天是否已完成 104 打卡喔！"
+        send_slack_message(msg, "上班打卡提醒")
+    else:
+        msg = "⏰ **下班打卡提醒**\n各位夥伴辛苦了！已經到下班時間囉，記得去 104 打卡！"
+        send_slack_message(msg, "下班打卡提醒")
