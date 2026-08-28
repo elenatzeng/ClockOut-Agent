@@ -39,8 +39,8 @@ if __name__ == "__main__":
         send_clock_in_reminder,
         trigger='cron',
         day_of_week='mon-fri',
-        hour=9,
-        minute=0
+        hour=08,
+        minute=30
     )
 
     # 2. 每週一至週五 17:00 提醒下班打卡
@@ -48,7 +48,7 @@ if __name__ == "__main__":
         send_clock_out_reminder,
         trigger='cron',
         day_of_week='mon-fri',
-        hour=17,
+        hour=15,
         minute=50
     )
 
