@@ -17,11 +17,9 @@ def send_slack_message(text, title):
         print(f"[失敗] 發送失敗: {e}")
 
 if __name__ == "__main__":
-    # 取得台灣當前小時 (0-23)
     taiwan_tz = pytz.timezone('Asia/Taipei')
     now_hour = datetime.now(taiwan_tz).hour
 
-    # 12 點前發上班提醒，12 點後發下班提醒
     if now_hour < 12:
         msg = "☀️ **上班打卡提醒**\n大家早安！記得確認今天是否已完成 104 打卡喔！"
         send_slack_message(msg, "上班打卡提醒")
