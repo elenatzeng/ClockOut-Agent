@@ -2,9 +2,8 @@ name: Slack Reminder
 
 on:
   schedule:
-    # 台灣時間 08:30 (UTC 00:30) 與 17:00 (UTC 09:00)
-    - cron: '30 0 * * 1-5'
-    - cron: '0 9 * * 1-5'
+    # 台灣時間 16:30 (UTC 08:30) 測試
+    - cron: '30 8 * * 1-5'
   workflow_dispatch:
 
 jobs:
