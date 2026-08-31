@@ -2,10 +2,10 @@ name: Slack Reminder
 
 on:
   schedule:
-    # 每天早上 08:30 提醒（對應 UTC 時間 00:30）
-    - cron: '30 0 * * 1-5'
-    # 每天下午 17:30 提醒（對應 UTC 時間 09:30）
-    - cron: '30 9 * * 1-5'
+    # 每天早上 08:33 提醒（對應 UTC 時間 00:33）
+    - cron: '33 0 * * 1-5'
+    # 每天下午 17:33 提醒（對應 UTC 時間 09:33）
+    - cron: '33 9 * * 1-5'
   workflow_dispatch: # 支援在 GitHub 手動按按鈕測試
 
 jobs:
@@ -33,4 +33,4 @@ jobs:
           USERNAME: ${{ secrets.ONE_ZERO_FOUR_USERNAME }}
           PASSWORD: ${{ secrets.ONE_ZERO_FOUR_PASSWORD }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: python main.py
+        run: python main.pyｓ
